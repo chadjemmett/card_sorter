@@ -44,7 +44,7 @@ print(sorted_deck)
 
 random_deck.close()
 
-sorted = open('sorted_deck.txt', 'w')
+sorted = open('sorted_deck second example.txt', 'w')
 sorted.write(sorted_deck)
 sorted.close()
 
