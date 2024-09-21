@@ -33,14 +33,13 @@ table with integer values.
 
 ## Limitations ##
 This would only work for a standard english-language deck of cards. The assumption that the deck would only
-contain 52 cards may be a bad assumtion. This algoright would sort more than 52 cards. But the resutl would
+contain 52 cards may be a bad assumtion. This algorithm would sort more than 52 cards. But the result would
 be 
-    ```
         Ace of Clubs
         Ace of Clubs
         One of Clubs
         One of Clubs
-    ```
+
 and on and on.
 
 
