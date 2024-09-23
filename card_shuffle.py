@@ -1,50 +1,68 @@
+class Deck():
 
-random_deck = open('shuffled_deck.txt', 'r')
+    # In python __init__ is a constructor in python.
+    # Self is Python's keyword that refers to the instance of class
+    def __init__ (self, imported_deck):
+        self.shuffled_deck  = imported_deck
+        self.card_list = []
+        self.deck_id  = 0
 
-shuffled_deck = []
+        self.face_values = {
+                'Ace': 1,
+                'Two': 2,
+                'Three': 3,
+                'Four': 4,
+                'Five': 5,
+                'Six': 6,
+                'Seven': 7,
+                'Eight': 8,
+                'Nine': 9,
+                'Ten': 10,
+                'Jack': 12, 
+                'Queen': 13, 
+                'King': 14, 
+            }
 
-for line in random_deck.readlines():
-    suit, value = line.split('of')[1].strip(), line.split('of')[0].strip()
-    shuffled_deck.append({'value': value, 'suit': suit })
+    # A double underscore designates the method as a private method.
+    # Each method does one thing. It updates or changed the data in the card_list praperty of the class.
+    def  __process_deck(self):
+        random_deck = open(self.shuffled_deck, 'r')
+        for line in random_deck.readlines():
+            suit, value = line.split('of')[1].strip(), line.split('of')[0].strip()
+            self.card_list.append({'value': value, 'suit': suit })
+        random_deck.close()
+    
+    def __index_values(self):
+        for hash in self.card_list:
+            hash['value'] = self.face_values[hash['value']]
+   
+    def  __sort(self):
+        self.card_list.sort(key=lambda hash: (hash['suit'], hash['value']))
 
+    def __reindex(self):
+        inverse_dict = {v: k for k, v in self.face_values.items()}
+        for card_values  in self.card_list:
+            card_values['value'] = inverse_dict[card_values['value']]
 
-face_values = {
-        'Ace': 1,
-        'Two': 2,
-        'Three': 3,
-        'Four': 4,
-        'Five': 5,
-        'Six': 6,
-        'Seven': 7,
-        'Eight': 8,
-        'Nine': 9,
-        'Ten': 10,
-        'Jack': 12, 
-        'Queen': 13, 
-        'King': 14, 
-    }
-# Note:  this is a list comprehension in Python. It allows you to invert your existing hash table.
+    def __write_to_file(self):
+        file = open(f"Sorted-{self.shuffled_deck}", "w")
+        file_data = ""
+        for line  in self.card_list:
+            file_data += f"{line['value']} of {line['suit']}\n"
 
-inverse_dict = {v: k for k, v in face_values.items()}
+        file.write(file_data)
+        file.close()
+        return f"Sorted-{self.shuffled_deck}"
 
-# replace strings with integers.
-for hash in shuffled_deck:
-    hash['value'] = face_values[hash['value']]
+    # the user only needs to do  two things. Provide an existing text file  of  shuffled cards. And call sort on the
+    # object
+    def sort(self):
+        self.__process_deck()
+        self.__index_values()
+        self.__sort()
+        self.__reindex()
+        return self.__write_to_file()
 
-# note: lambda is an anonymous function in python. In it we pick out the key to the value we want to sort by.
-shuffled_deck.sort(key=lambda hash: (hash['suit'], hash['value']))
-
-# a string to output the same format we got in.
-sorted_deck = ""
-
-for hash in shuffled_deck:
-    sorted_deck += f"{inverse_dict[hash['value']]} of {hash['suit']}\n"
-
-print(sorted_deck)
-
-random_deck.close()
-
-sorted = open('sorted_deck second example.txt', 'w')
-sorted.write(sorted_deck)
-sorted.close()
+d = Deck("shuffled_deck.txt")
+print(d.sort())
 
